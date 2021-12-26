@@ -1585,7 +1585,7 @@ while True:
 
                         """
                     # fonction tour (haut,bas, gauche, droite)
-                    print('les x du roi sont',pièces_échec['nroi'].x,'tandis que les x de la reine sont',pièces_échec[pièce].x)
+                    print(' les x du roi sont',pièces_échec['nroi'].x,'tandis que les x de la reine sont',pièces_échec[pièce].x)
                     if pièces_échec['nroi'].x == pièces_échec[pièce].x:  # même x
 
                         if pièces_échec[pièce].y < pièces[
