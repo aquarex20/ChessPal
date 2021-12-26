@@ -1,0 +1,508 @@
+        def coup_safe_pour_noirs():
+
+            for pièce in pièces_échec:
+
+                if (pièce == "bpion1" or pièce == "bpion2" or pièce == "bpion3" or
+                        pièce == "bpion4" or pièce == "bpion5" or pièce == "bpion6" or
+                        pièce == "bpion7" or pièce == "bpion8"):
+
+                    # Si le pion blanc est en mesure de manger à droite ou à gauche, où se trouve le nroi
+                    if pièces_échec[pièce] == Rect(pièces_échec['nroi'].x - xxa, pièces_échec['nroi'].y + yya, 55, 55) or \
+                            pièces_échec[pièce] == Rect(pièces_échec['nroi'].x + xxa, pièces_échec['nroi'].y + yya, 55, 55):
+                        return False
+
+                if (pièce == "btour1" or pièce == "btour2"):
+                    if pièces_échec['nroi'].x == pièces_échec[pièce].x:  # même x
+
+                        if pièces_échec[pièce].y < pièces[
+                            'nroi'].y:  # tour en haut, elle va parcourir en bas, donc y monte
+                            j = +1  # variable d'incrémentation pour parcourir tous les rectangles vers le bas
+                            obstrué = False  # On part d'une base qu'il n'y a pas d'obstruction.Dans le cas contraire démontré par le for ChaqueRec, alors...
+                            liste_RecObstruction, liste_Rec = [], []
+
+                            for case in cases:
+                                if pièces_échec[pièce].colliderect(cases[case]):
+                                    case_de_base = cases[case]
+
+                        while j <= 8:  # le maximum de cases parcourable.
+                            liste_Rec.append(Rect(case_de_base.x, case_de_base.y + j * yy, 55, 55))
+
+                            if Rect(case_de_base.x, case_de_base.y + j * yy, 55, 55).collidedict(pièces, True) != None:
+                                liste_RecObstruction.append(Rect(case_de_base.x, case_de_base.y + j * yy, 55,
+                                                                 55))  # on ne comptabilise pas la première case (comme elle contient la tour initiale)
+
+                            j += 1
+
+                        if liste_RecObstruction != []:
+
+                            if liste_RecObstruction[0].collidedict(pièces, True) != None:
+                                if liste_RecObstruction[0].collidedict(pièces, True)[0] == "nroi":
+                                    # print(pièce, "met le roi noir en échec!")
+
+                                    return False
+
+                        if pièces_échec[pièce].y > pièces[
+                            'nroi'].y:  # tour en bas, elle va parcourir en haut, donc y descend
+
+                            j = -1  # variable d'incrémentation pour parcourir tous les rectangles vers le bas
+                            obstrué = False  # On part d'une base qu'il n'y a pas d'obstruction.Dans le cas contraire démontré par le for ChaqueRec, alors...
+                            liste_RecObstruction, liste_Rec = [], []
+                            for case in cases:
+                                if pièces_échec[pièce].colliderect(cases[case]):
+                                    case_de_base = cases[case]
+
+                        while -j <= 8:  # le maximum qu'on peut parcourir sur une diagonale est de 8.
+                            liste_Rec.append(Rect(case_de_base.x, case_de_base.y + j * yy, 55, 55))
+                            # print(j, ": ", liste_RecObstruction, "\n")
+
+                            if Rect(case_de_base.x, case_de_base.y + j * yy, 55, 55).collidedict(pièces, True) != None:
+                                liste_RecObstruction.append(Rect(case_de_base.x, case_de_base.y + j * yy, 55,
+                                                                 55))  # on ne comptabilise pas la première case (comme elle contient la tour initiale)
+                            j -= 1
+                        if liste_RecObstruction[0].collidedict(pièces, True) != None:
+                            if liste_RecObstruction[0].collidedict(pièces, True)[0] == "nroi":
+                                # print(pièce, "met le roi noir en échec!")
+
+                                return False
+
+                    if pièces_échec['nroi'].y == pièces_échec[pièce].y:  # même y
+
+                        if pièces_échec[pièce].x < pièces[
+                            'nroi'].x:  # tour à gauche, elle va parcourir à droite, donc x augmente.
+                            j = +1  # variable d'incrémentation pour parcourir tous les rectangles vers la droite
+                            obstrué = False  # On part d'une base qu'il n'y a pas d'obstruction.Dans le cas contraire démontré par le for ChaqueRec, alors...
+                            liste_RecObstruction, liste_Rec = [], []
+                            for case in cases:
+                                if pièces_échec[pièce].colliderect(cases[case]):
+                                    case_de_base = cases[case]
+
+                        while j <= 8:  # le maximum de cases parcourable.
+                            liste_Rec.append(Rect(case_de_base.x + j * xx, case_de_base.y, 55, 55))
+
+                            if Rect(case_de_base.x + j * xx, case_de_base.y, 55, 55).collidedict(pièces, True) != None:
+                                liste_RecObstruction.append(Rect(case_de_base.x + j * xx, case_de_base.y, 55,
+                                                                 55))  # on ne comptabilise pas la première case (comme elle contient la tour initiale)
+
+                            j += 1
+
+                        print("Liste Rec Obstruction est", liste_RecObstruction)
+                        if liste_RecObstruction[0].collidedict(pièces, True) != None:
+                            if liste_RecObstruction[0].collidedict(pièces, True)[0] == "nroi":
+                                # print(pièce, "met le roi noir en échec!")
+
+                                return False
+
+                        if pièces_échec[pièce].x > pièces[
+                            'nroi'].x:  # tour à droite, elle va parcourir à gauche, donc x diminue.
+                            j = -1  # variable d'incrémentation pour parcourir tous les rectangles vers la droite
+                            obstrué = False  # On part d'une base qu'il n'y a pas d'obstruction.Dans le cas contraire démontré par le for ChaqueRec, alors...
+                            liste_RecObstruction, liste_Rec = [], []
+                            for case in cases:
+                                if pièces_échec[pièce].colliderect(cases[case]):
+                                    case_de_base = cases[case]
+
+                        while -j <= 8:  # le maximum qu'on peut parcourir sur une diagonale est de 8.
+                            liste_Rec.append(Rect(case_de_base.x + j * xx, case_de_base.y, 55, 55))
+
+                            if Rect(case_de_base.x + j * xx, case_de_base.y, 55, 55).collidedict(pièces, True) != None:
+                                liste_RecObstruction.append(Rect(case_de_base.x + j * xx, case_de_base.y, 55,
+                                                                 55))  # on ne comptabilise pas la première case (comme elle contient la tour initiale)
+                            j -= 1
+
+                        if liste_RecObstruction[0].collidedict(pièces, True) != None:
+                            if liste_RecObstruction[0].collidedict(pièces, True)[0] == "nroi":
+                                # print(pièce, "met le roi noir en échec!")
+
+                                return False
+
+                if (pièce == "bcheval1" or pièce == "bcheval2"):
+
+                    if ((pièces_échec['nroi'].y == pièces_échec[pièce].y - 2 * yy and pièces_échec['nroi'].x == pièces_échec[
+                        pièce].x - xx)  # 1
+                            or (pièces_échec['nroi'].y == pièces_échec[pièce].y - 2 * yy and pièces_échec['nroi'].x == pièces_échec[
+                                pièce].x + xx)  # 2
+                            or (pièces_échec['nroi'].y == pièces_échec[pièce].y - yy and pièces_échec['nroi'].x == pièces_échec[
+                                pièce].x + 2 * xx)  # 3
+                            or (pièces_échec['nroi'].y == pièces_échec[pièce].y - yy and pièces_échec['nroi'].x == pièces_échec[
+                                pièce].x - 2 * xx)  # 4
+                            or (pièces_échec['nroi'].y == pièces_échec[pièce].y + 2 * yy and pièces_échec['nroi'].x == pièces_échec[
+                                pièce].x - xx)  # 5
+                            or (pièces_échec['nroi'].y == pièces_échec[pièce].y + 2 * yy and pièces_échec['nroi'].x == pièces_échec[
+                                pièce].x + xx)  # 6
+                            or (pièces_échec['nroi'].y == pièces_échec[pièce].y + yy and pièces_échec['nroi'].x == pièces_échec[
+                                pièce].x + 2 * xx)  # 7
+                            or (pièces_échec['nroi'].y == pièces_échec[pièce].y + yy and pièces_échec['nroi'].x == pièces_échec[
+                                pièce].x - 2 * xx)  # 8
+                    ):
+                        return False
+
+                if (
+                        pièce == "bfou1" or pièce == "bfou2"):  # pour le fou, on sait pas si le roi est sur une des diagonales, donc on va essayer
+                    # dans toutes les directions
+
+                    # haut droite
+
+                    # Code obstruction
+
+                    if pièces_échec['nroi'].y < pièces_échec[pièce].y and pièces_échec['nroi'].x > pièces_échec[
+                        pièce].x:  # cela revient à monter et aller à droite
+
+                        liste_RecObstruction, liste_Rec = [], []
+                        for case in cases:
+                            if pièces_échec[pièce].colliderect(cases[case]):
+                                case_de_base = cases[case]
+                        j, jx = 1, 1  # variable d'incrémentation pour parcourir tous les rectangles en x dans le cas d'un mouvement vers la droite.
+                        jy = -1  # variable d'incrémentation pourc parcourir tous les rectangles en y dans le cas d'une montée.
+                        onlyroi, obstrué = [], False
+
+                        while j <= 8:  # le maximum qu'on peut parcourir sur une diagonale est de 8.
+                            # liste_Rec.append(Rect(case_de_base.x+jx*xx, case_de_base.y+jy*yy,55,55))
+
+                            if Rect(case_de_base.x + jx * xx, case_de_base.y + jy * yy, 55, 55).collidedict(pièces,
+                                                                                                            True) != None:
+                                liste_RecObstruction.append(Rect(case_de_base.x + jx * xx, case_de_base.y + jy * yy, 55,
+                                                                 55))  # on ne comptabilise pas la première case (comme elle contient la tour initiale)
+                            jy -= 1  # vers le haut
+                            jx += 1  # vers la droite
+                            j += 1
+                        if liste_RecObstruction != []:
+                            if liste_RecObstruction[0].collidedict(pièces, True) != None:
+                                if liste_RecObstruction[0].collidedict(pièces, True)[0] == "nroi":
+                                    # print(pièce, "met le roi noir en échec! via haut droite")
+                                    print("\n La liste est", liste_RecObstruction)
+
+                                    return False
+
+                    # haut gauche
+                    if pièces_échec['nroi'].y < pièces_échec[pièce].y and pièces_échec['nroi'].x < pièces_échec[
+                        pièce].x:  # cela revient à monter et aller à gauche
+
+                        case_de_base = pièces_échec[pièce].collidedict(cases, True)
+                        liste_RecObstruction, liste_Rec = [], []
+                        for case in cases:
+                            if pièces_échec[pièce].colliderect(cases[case]):
+                                case_de_base = cases[case]
+                        j, jx = 1, -1  # variable d'incrémentation pour parcourir tous les rectangles en x dans le cas d'un mouvement vers la gauche.
+                        jy = -1  # variable d'incrémentation pour parcourir tous les rectangles en y dans le cas d'une montée.
+                        onlyroi, obstrué = [], False
+
+                        while j <= 8:  # le maximum qu'on peut parcourir sur une diagonale est de 8.
+                            # liste_Rec.append(Rect(case_de_base.x+jx*xx, case_de_base.y+jy*yy,55,55))
+
+                            if Rect(case_de_base.x + jx * xx, case_de_base.y + jy * yy, 55, 55).collidedict(pièces,
+                                                                                                            True) != None:
+                                liste_RecObstruction.append(Rect(case_de_base.x + jx * xx, case_de_base.y + jy * yy, 55,
+                                                                 55))  # on ne comptabilise pas la première case (comme elle contient la tour initiale)
+                            jy -= 1  # vers le haut
+                            jx -= 1  # vers la gauche
+                            j += 1
+
+                        if liste_RecObstruction != []:
+                            if liste_RecObstruction[0].collidedict(pièces, True)[0] == "nroi":
+                                # print(pièce, "met le roi noir en échec! via haut gauche")
+                                print("\n La liste est", liste_RecObstruction, "et la liste sans obs est ", liste_Rec)
+
+                                return False
+
+                    # bas droite
+                    if pièces_échec['nroi'].y > pièces_échec[pièce].y and pièces_échec['nroi'].x > pièces_échec[
+                        pièce].x:  # cela revient à descendre et aller à droite
+
+                        liste_RecObstruction, liste_Rec = [], []
+                        for case in cases:
+                            if pièces_échec[pièce].colliderect(cases[case]):
+                                case_de_base = cases[case]
+                        j, jx = 1, +1  # variable d'incrémentation pour parcourir tous les rectangles en x dans le cas d'un mouvement vers la droite.
+                        jy = +1  # variable d'incrémentation pour parcourir tous les rectangles en x dans le cas d'une descente.
+                        onlyroi, obstrué = [], False
+
+                        while j <= 8:  # le maximum qu'on peut parcourir sur une diagonale est de 8.
+                            # liste_Rec.append(Rect(case_de_base.x+jx*xx, case_de_base.y+jy*yy,55,55))
+
+                            if Rect(case_de_base.x + jx * xx, case_de_base.y + jy * yy, 55, 55).collidedict(pièces,
+                                                                                                            True) != None:
+                                liste_RecObstruction.append(Rect(case_de_base.x + jx * xx, case_de_base.y + jy * yy, 55,
+                                                                 55))  # on ne comptabilise pas la première case (comme elle contient la tour initiale)
+                            jy += 1  # vers le bas
+                            jx += 1  # vers la droite
+                            j += 1
+
+                        if liste_RecObstruction != []:
+                            if liste_RecObstruction[0].collidedict(pièces, True)[0] == "nroi":
+                                # print(pièce, "met le roi noir en échec!")
+
+                                return False
+
+                    # bas gauche
+
+                    if pièces_échec['nroi'].y > pièces_échec[pièce].y and pièces_échec['nroi'].x < pièces_échec[
+                        pièce].x:  # cela revient à descendre et aller à gauche
+
+                        liste_RecObstruction, liste_Rec = [], []
+                        for case in cases:
+                            if pièces_échec[pièce].colliderect(cases[case]):
+                                case_de_base = cases[case]
+                        j, jx = 1, -1  # variable d'incrémentation pour parcourir tous les rectangles en x dans le cas d'un mouvement vers la gauched.
+                        jy = +1  # variable d'incrémentation pour parcourir tous les rectangles en x dans le cas d'une descente.
+                        onlyroi, obstrué = [], False
+
+                        while j <= 8:  # le maximum qu'on peut parcourir sur une diagonale est de 8.
+                            # liste_Rec.append(Rect(case_de_base.x+jx*xx, case_de_base.y+jy*yy,55,55))
+
+                            if Rect(case_de_base.x + jx * xx, case_de_base.y + jy * yy, 55, 55).collidedict(pièces,
+                                                                                                            True) != None:
+                                liste_RecObstruction.append(Rect(case_de_base.x + jx * xx, case_de_base.y + jy * yy, 55,
+                                                                 55))  # on ne comptabilise pas la première case (comme elle contient la tour initiale)
+                            jy += 1  # vers le bas
+                            jx -= 1  # vers la gauche
+                            j += 1
+                        if liste_RecObstruction != []:
+                            if liste_RecObstruction[0].collidedict(pièces, True)[0] == "nroi":
+                                # print(pièce, "met le roi noir en échec!")
+
+                                return False
+
+                if (pièce == "breine"):
+
+                    """
+
+                    Cette fois-ci, on va relier 2 codes obstruction! Celui de la tour et celui  du fou, comme ce sont les fonctions
+                    inhérentes de la reine. Comme la reine effectue exactement les mêmes fonctions que le fou et la tour. Alors,
+                    on va juste les copier coller...
+                    Ses fonctions sont:
+                    1. Haut jusqu'à limite sans échec
+                    2. Bas jusqu'à limite sans échec
+                    3. Droite jusqu'à  limite sans échec
+                    4. Gauche jusqu'à limite sans échec
+                    5. Diagonale Haut Droite jusqu'à limite sans échec
+                    6. Diagonale Haut Gauche jusqu'à limite sans échec
+                    7. Diagonale Bas Droite jusqu'à limite sans échec
+                    8. Diagonale Bas Gauche jusqu'à limite sans échec
+
+                        """
+                    # fonction tour (haut,bas, gauche, droite)
+                    print('les x du roi sont',pièces_échec['nroi'].x,'tandis que les x de la reine sont',pièces_échec[pièce].x)
+                    if pièces_échec['nroi'].x == pièces_échec[pièce].x:  # même x
+                        print("on est sur  le même x baby")
+
+                        if pièces_échec[pièce].y < pièces[
+                            'nroi'].y:  # tour en haut, elle va parcourir en bas, donc y monte
+                            j = +1  # variable d'incrémentation pour parcourir tous les rectangles vers le bas
+                            obstrué = False  # On part d'une base qu'il n'y a pas d'obstruction.Dans le cas contraire démontré par le for ChaqueRec, alors...
+                            liste_RecObstruction, liste_Rec = [], []
+                            for case in cases:
+                                if pièces_échec[pièce].colliderect(cases[case]):
+                                    case_de_base = cases[case]
+
+                        while j <= 8:  # le maximum de cases parcourable.
+                            liste_Rec.append(Rect(case_de_base.x, case_de_base.y + j * yy, 55, 55))
+
+                            if Rect(case_de_base.x, case_de_base.y + j * yy, 55, 55).collidedict(pièces, True) != None:
+                                liste_RecObstruction.append(Rect(case_de_base.x, case_de_base.y + j * yy, 55,
+                                                                 55))  # on ne comptabilise pas la première case (comme elle contient la tour initiale)
+
+                            j += 1
+
+                        if liste_RecObstruction != []:
+
+                            if liste_RecObstruction[0].collidedict(pièces, True) != None:
+                                if liste_RecObstruction[0].collidedict(pièces, True)[0] == "nroi":
+                                    # print(pièce, "met le roi noir en échec!")
+
+                                    return False
+
+                        if pièces_échec[pièce].y > pièces[
+                            'nroi'].y:  # tour en bas, elle va parcourir en haut, donc y descend
+
+                            j = -1  # variable d'incrémentation pour parcourir tous les rectangles vers le bas
+                            obstrué = False  # On part d'une base qu'il n'y a pas d'obstruction.Dans le cas contraire démontré par le for ChaqueRec, alors...
+                            liste_RecObstruction, liste_Rec = [], []
+                            for case in cases:
+                                if pièces_échec[pièce].colliderect(cases[case]):
+                                    case_de_base = cases[case]
+
+                        while -j <= 8:  # le maximum qu'on peut parcourir sur une diagonale est de 8.
+                            liste_Rec.append(Rect(case_de_base.x, case_de_base.y + j * yy, 55, 55))
+                            # print(j, ": ", liste_RecObstruction, "\n")
+
+                            if Rect(case_de_base.x, case_de_base.y + j * yy, 55, 55).collidedict(pièces, True) != None:
+                                liste_RecObstruction.append(Rect(case_de_base.x, case_de_base.y + j * yy, 55,
+                                                                 55))  # on ne comptabilise pas la première case (comme elle contient la tour initiale)
+                            j -= 1
+                        if liste_RecObstruction[0].collidedict(pièces, True) != None:
+                            if liste_RecObstruction[0].collidedict(pièces, True)[0] == "nroi":
+                                # print(pièce, "met le roi noir en échec!")
+
+                                return False
+
+                    if pièces_échec['nroi'].y == pièces_échec[pièce].y:  # même y
+
+                        if pièces_échec[pièce].x < pièces[
+                            'nroi'].x:  # tour à gauche, elle va parcourir à droite, donc x augmente.
+                            j = +1  # variable d'incrémentation pour parcourir tous les rectangles vers la droite
+                            obstrué = False  # On part d'une base qu'il n'y a pas d'obstruction.Dans le cas contraire démontré par le for ChaqueRec, alors...
+                            liste_RecObstruction, liste_Rec = [], []
+                            for case in cases:
+                                if pièces_échec[pièce].colliderect(cases[case]):
+                                    case_de_base = cases[case]
+
+                        while j <= 8:  # le maximum de cases parcourable.
+                            liste_Rec.append(Rect(case_de_base.x + j * xx, case_de_base.y, 55, 55))
+
+                            if Rect(case_de_base.x + j * xx, case_de_base.y, 55, 55).collidedict(pièces, True) != None:
+                                liste_RecObstruction.append(Rect(case_de_base.x + j * xx, case_de_base.y, 55,
+                                                                 55))  # on ne comptabilise pas la première case (comme elle contient la tour initiale)
+
+                            j += 1
+
+                        print("Liste Rec Obstruction est", liste_RecObstruction)
+                        if liste_RecObstruction[0].collidedict(pièces, True) != None:
+                            if liste_RecObstruction[0].collidedict(pièces, True)[0] == "nroi":
+                                # print(pièce, "met le roi noir en échec!")
+
+                                return False
+
+                        if pièces_échec[pièce].x > pièces[
+                            'nroi'].x:  # tour à droite, elle va parcourir à gauche, donc x diminue.
+                            j = -1  # variable d'incrémentation pour parcourir tous les rectangles vers la droite
+                            obstrué = False  # On part d'une base qu'il n'y a pas d'obstruction.Dans le cas contraire démontré par le for ChaqueRec, alors...
+                            liste_RecObstruction, liste_Rec = [], []
+                            for case in cases:
+                                if pièces_échec[pièce].colliderect(cases[case]):
+                                    case_de_base = cases[case]
+
+                        while -j <= 8:  # le maximum qu'on peut parcourir sur une diagonale est de 8.
+                            liste_Rec.append(Rect(case_de_base.x + j * xx, case_de_base.y, 55, 55))
+
+                            if Rect(case_de_base.x + j * xx, case_de_base.y, 55, 55).collidedict(pièces, True) != None:
+                                liste_RecObstruction.append(Rect(case_de_base.x + j * xx, case_de_base.y, 55,
+                                                                 55))  # on ne comptabilise pas la première case (comme elle contient la tour initiale)
+                            j -= 1
+
+                        if liste_RecObstruction[0].collidedict(pièces, True) != None:
+                            if liste_RecObstruction[0].collidedict(pièces, True)[0] == "nroi":
+                                # print(pièce, "met le roi noir en échec!")
+
+                                return False
+
+                    # haut droite
+
+                    # Code obstruction
+
+                    if pièces_échec['nroi'].y < pièces_échec[pièce].y and pièces_échec['nroi'].x > pièces_échec[pièce].x:
+                        # cela revient à monter et aller à droite
+
+                        liste_RecObstruction, liste_Rec = [], []
+                        for case in cases:
+                            if pièces_échec[pièce].colliderect(cases[case]):
+                                case_de_base = cases[case]
+                        j, jx = 1, 1  # variable d'incrémentation pour parcourir tous les rectangles en x dans le cas d'un mouvement vers la droite.
+                        jy = -1  # variable d'incrémentation pour parcourir tous les rectangles en y dans le cas d'une montée.
+                        onlyroi, obstrué = [], False
+
+                        while j <= 8:  # le maximum qu'on peut parcourir sur une diagonale est de 8.
+                            liste_Rec.append(Rect(case_de_base.x + jx * xx, case_de_base.y + jy * yy, 55, 55))
+
+                            if Rect(case_de_base.x + jx * xx, case_de_base.y + jy * yy, 55, 55).collidedict(pièces,
+                                                                                                            True) != None:
+                                liste_RecObstruction.append(Rect(case_de_base.x + jx * xx, case_de_base.y + jy * yy, 55,
+                                                                 55))  # on ne comptabilise pas la première case (comme elle contient la tour initiale)
+                            jy -= 1  # vers le haut
+                            jx += 1  # vers la droite
+                            j += 1
+                        if liste_RecObstruction != []:
+                            if liste_RecObstruction[0].collidedict(pièces, True) != None:
+                                if liste_RecObstruction[0].collidedict(pièces, True)[0] == "nroi":
+                                    # print(pièce, "met le roi noir en échec!")
+
+                                    return False
+
+                    # haut gauche
+                    if pièces_échec['nroi'].y < pièces_échec[pièce].y and pièces_échec['nroi'].x < pièces_échec[
+                        pièce].x:  # cela revient à monter et aller à gauche
+
+                        liste_RecObstruction, liste_Rec = [], []
+                        for case in cases:
+                            if pièces_échec[pièce].colliderect(cases[case]):
+                                case_de_base = cases[case]
+                        j, jx = 1, -1  # variable d'incrémentation pour parcourir tous les rectangles en x dans le cas d'un mouvement vers la gauche.
+                        jy = -1  # variable d'incrémentation pour parcourir tous les rectangles en y dans le cas d'une montée.
+                        onlyroi, obstrué = [], False
+
+                        while j <= 8:  # le maximum qu'on peut parcourir sur une diagonale est de 8.
+                            liste_Rec.append(Rect(case_de_base.x + jx * xx, case_de_base.y + jy * yy, 55, 55))
+
+                            if Rect(case_de_base.x + jx * xx, case_de_base.y + jy * yy, 55, 55).collidedict(pièces_échec,True) != None:
+                                liste_RecObstruction.append(Rect(case_de_base.x + jx * xx, case_de_base.y + jy * yy, 55,
+                                                                 55))  # on ne comptabilise pas la première case (comme elle contient la tour initiale)
+                            jy -= 1  # vers le haut
+                            jx -= 1  # vers la gauche
+                            j += 1
+                        if liste_RecObstruction != []:
+
+                            if liste_RecObstruction[0].collidedict(pièces, True) != None:
+                                if liste_RecObstruction[0].collidedict(pièces, True)[0] == "nroi":
+                                    # print(pièce, "met le roi noir en échec!")
+
+                                    return False
+
+                    # bas droite
+                    if pièces_échec['nroi'].y > pièces_échec[pièce].y and pièces_échec['nroi'].x > pièces_échec[
+                        pièce].x:  # cela revient à descendre et aller à droite
+
+                        liste_RecObstruction, liste_Rec = [], []
+                        for case in cases:
+                            if pièces_échec[pièce].colliderect(cases[case]):
+                                case_de_base = cases[case]
+                        j, jx = 1, +1  # variable d'incrémentation pour parcourir tous les rectangles en x dans le cas d'un mouvement vers la droite.
+                        jy = +1  # variable d'incrémentation pour parcourir tous les rectangles en x dans le cas d'une descente.
+                        onlyroi, obstrué = [], False
+
+                        while j <= 8:  # le maximum qu'on peut parcourir sur une diagonale est de 8.
+                            liste_Rec.append(Rect(case_de_base.x + jx * xx, case_de_base.y + jy * yy, 55, 55))
+
+                            if Rect(case_de_base.x + jx * xx, case_de_base.y + jy * yy, 55, 55).collidedict(pièces,
+                                                                                                            True) != None:
+                                liste_RecObstruction.append(Rect(case_de_base.x + jx * xx, case_de_base.y + jy * yy, 55,
+                                                                 55))  # on ne comptabilise pas la première case (comme elle contient la tour initiale)
+                            jy += 1  # vers le bas
+                            jx += 1  # vers la droite
+                            j += 1
+                        if liste_RecObstruction != []:
+                            if liste_RecObstruction[0].collidedict(pièces, True)[0] == "nroi":
+                                # print(pièce, "met le roi noir en échec!")
+
+                                return False
+
+                    # bas gauche
+                    if pièces_échec['nroi'].y > pièces_échec[pièce].y and pièces_échec['nroi'].x < pièces_échec[
+                        pièce].x:  # cela revient à descendre et aller à gauche
+
+                        liste_RecObstruction, liste_Rec = [], []
+                        for case in cases:
+                            if pièces_échec[pièce].colliderect(cases[case]):
+                                case_de_base = cases[case]
+                        j, jx = 1, -1  # variable d'incrémentation pour parcourir tous les rectangles en x dans le cas d'un mouvement vers la gauched.
+                        jy = +1  # variable d'incrémentation pour parcourir tous les rectangles en x dans le cas d'une descente.
+                        onlyroi, obstrué = [], False
+
+                        while j <= 8:  # le maximum qu'on peut parcourir sur une diagonale est de 8.
+
+                            liste_Rec.append(Rect(case_de_base.x + jx * xx, case_de_base.y + jy * yy, 55, 55))
+
+                            if Rect(case_de_base.x + jx * xx, case_de_base.y + jy * yy, 55, 55).collidedict(pièces,
+                                                                                                            True) != None:
+                                liste_RecObstruction.append(Rect(case_de_base.x + jx * xx, case_de_base.y + jy * yy, 55,
+                                                                 55))  # on ne comptabilise pas la première case (comme elle contient la tour initiale)
+                            jy += 1  # vers le bas
+                            jx -= 1  # vers la gauche
+                            j += 1
+
+                        if liste_RecObstruction[0].collidedict(pièces, True) != None:
+                            if liste_RecObstruction[0].collidedict(pièces, True)[0] == "nroi":
+                                # print(pièce, "met le roi noir en échec!")
+
+                                return False
+
+            return True
+
